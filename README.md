@@ -1,4 +1,4 @@
-**Code is currently is not runnable as it is missing the environment conda file which contains forked repositories that would violate the double-blind review process**
+**Code is currently not runnable as it is missing the environment conda file which contains forked repositories that would violate the double-blind review process. However, the core code for the algorithms is included.**
 
 # Code Structure
 
