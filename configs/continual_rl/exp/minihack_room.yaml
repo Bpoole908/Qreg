@@ -1,0 +1,17 @@
+num_timesteps: 300000
+num_tasks: ${eval:'len(${.exp_loader.env_name_pairs})'}
+name: minihack-room
+
+# continual_rl uses 5 instead of 4 like other procgen tasks. 
+exp_loader:
+  _target_: continual_rl.experiment_specs.create_minihack_loader
+  task_prefix: minihack
+  env_name_pairs:
+    - ["Room-Random-5x5-v0", "Room-Random-15x15-v0"]
+    - ["Room-Dark-5x5-v0", "Room-Dark-15x15-v0"]
+    - ["Room-Monster-5x5-v0", "Room-Monster-15x15-v0"]
+    - ["Room-Trap-5x5-v0", "Room-Trap-15x15-v0"]
+    - ["Room-Ultimate-5x5-v0", "Room-Ultimate-15x15-v0"]
+  num_timesteps: ${exp.num_timesteps}
+  continual_testing_freq:  ${eval:${exp.num_timesteps}//5}
+  cycle_count: 4

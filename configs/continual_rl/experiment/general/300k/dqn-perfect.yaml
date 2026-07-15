@@ -1,0 +1,16 @@
+# @package _global_
+defaults:
+- override /policy: dqn
+- override /exp: ???
+- _self_
+
+name_prefix: ${exp.name}-dqn_
+name: ${call_module:crl.policies.dqn.dqn_policy_config.experiment_tag,${policy},${exp}}
+
+exp:
+  num_timesteps: 300000
+
+policy:
+  policy_kwargs:
+    buffer_size: 1500000
+    save_replay_buffer: False

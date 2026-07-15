@@ -1,0 +1,16 @@
+# @package _global_
+defaults:
+- override /policy: l2
+- override /exp: ???
+- _self_
+
+name_prefix: ${exp.name}-l2-dqn_
+name: ${call_module:crl.policies.l2.l2_dqn_policy_config.experiment_tag,${policy},${exp}}
+
+exp:
+  num_timesteps: 300000
+
+policy:
+  policy_kwargs:
+    buffer_size: 50000
+    reg_coef: 100

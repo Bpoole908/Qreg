@@ -1,0 +1,22 @@
+# @package _global_
+defaults:
+- override /policy: mer
+- override /exp: ???
+- _self_
+
+name_prefix: ${exp.name}-mer_
+name: ${call_module:crl.policies.mer.mer_dqn_policy_config.experiment_tag,${policy},${exp}}
+
+exp:
+  num_timesteps: 300000
+
+policy:
+  policy_kwargs:
+    batch_size: 16
+    buffer_size: 50000
+    within_batch_beta: 1
+    across_batch_gamma: 0.3
+    reset_buffer: False 
+    reset_optimizer: False
+    combined_sampling: True
+    online: True

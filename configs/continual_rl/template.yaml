@@ -1,0 +1,46 @@
+defaults:
+  - _self_
+  - policy: ???
+  - exp: ???
+  - override hydra/hydra_logging: disabled  
+  - override hydra/job_logging: disabled 
+
+# Way to group similar experiments.
+# By default will group by date and time.
+output_dir: ${now:%Y-%m-%d}
+# Name of the job/experiment to be ran.
+# This is typically assigned via when creating an experiment config
+name: ???
+name_prefix: ''
+name_postfix: ''
+job_name: ${name_prefix}${name}${name_postfix}
+# Only build and instantiate the config - DOES NOT run the actual experiment
+validate_config: False
+
+# Variables for hydra config - DO NOT OVERWRITE!
+# These are not added directly to the hydra config below
+# in order to prevent the set_run_id() resolver from having a recursive loop.
+root_dir: 'exps'
+run_dir: ${root_dir}/${output_dir}/${job_name}
+sweep_dir: ${root_dir}/${output_dir}
+sweep_subdir: ${job_name}
+run_id: ${get_run_id:${run_dir}}
+
+# seed:
+#   _target_: crl.common.utils.set_torch_random_seed
+#   seed: 42
+#   cuda_deterministic: False
+
+# Hydra config options - DO NOT OVERWRITE!
+hydra:
+  run:  
+    dir: ${run_dir}/${run_id}
+  job:
+    chdir: True
+    name: ${job_name}
+  sweep:
+    dir: ${sweep_dir}
+    subdir: ${sweep_subdir}/${run_id}
+  callbacks:
+    save_job_info:
+      _target_: hydra.experimental.callbacks.PickleJobInfoCallback

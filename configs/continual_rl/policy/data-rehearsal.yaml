@@ -1,0 +1,51 @@
+policy_kwargs:
+  batch_size: 32
+  buffer_size: 50000
+  combined_sampling: false
+  dqn_kwargs: {}
+  exploration_rate: 0.05
+  handle_timeout_termination: false
+  iterative_compute_size: 2000
+  iteratively_compute_samples: false
+  learning_rate: 0.0001
+  log_sample_rate: 0.005
+  loss_kwargs:
+    discount_factor: 0.99
+    reward_clipping_func:
+      _partial_: true
+      _target_: torch.clamp
+      max: 1
+      min: -1
+  loss_name: dqn
+  networks_to_log: ['q_head', 'encoder']
+  optimize_memory_usage: true
+  rrb_add_frequency: 2001
+  rrb_add_history: 2000
+  rrb_add_sample_size: 32
+  rrb_buffer_size: 100000
+  rrb_loss_kwargs:
+    lambda_q: '???'
+    lambda_e: '???'
+    lambda_qhead: '???'
+    soft_embeddings: false
+    soft_q_values: false
+  rrb_update_frequency: ${.rrb_add_frequency}
+  rrb_batch_size: 256
+  render_collection_freq: null
+  reset_buffer: false
+  reset_optimizer: false
+  save_replay_buffer: true
+  target_update_frequency: 10000
+  timesteps_per_collection: 4
+  timesteps_per_save: ${exp.num_timesteps}
+  track_task_id: true
+  update_after: null
+  wait_to_reg: true
+policy_struct:
+  _target_: continual_rl.available_policies.PolicyStruct
+  config:
+    _target_: hydra.utils.get_class
+    path: crl.policies.data_rehearsal.drdqn_policy_config.DRDQNPolicyConfig
+  policy:
+    _target_: hydra.utils.get_class
+    path: crl.policies.data_rehearsal.drdqn_policy.DRDQNPolicy

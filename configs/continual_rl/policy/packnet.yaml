@@ -1,0 +1,40 @@
+policy_kwargs:
+  batch_size: 32
+  buffer_size: 50000
+  combined_sampling: false
+  dqn_kwargs:
+    encoder_activation:
+      _partial_: true
+      _target_: torch.nn.LeakyReLU
+      negative_slope: 0.2
+  exploration_rate: 0.05
+  handle_timeout_termination: false
+  learning_rate: 0.0001
+  loss_kwargs:
+    discount_factor: 0.99
+    reward_clipping_func:
+      _partial_: true
+      _target_: torch.clamp
+      max: 1
+      min: -1
+  loss_name: dqn
+  num_tasks: ${exp.num_tasks}
+  optimize_memory_usage: true
+  render_collection_freq: null
+  reset_buffer: true
+  reset_optimizer: true
+  retrain_steps: 10000
+  save_replay_buffer: true
+  target_update_frequency: 10000
+  timesteps_per_collection: 4
+  timesteps_per_save: ${exp.num_timesteps}
+  track_task_id: true
+  update_after: null
+policy_struct:
+  _target_: continual_rl.available_policies.PolicyStruct
+  config:
+    _target_: hydra.utils.get_class
+    path: crl.policies.packnet.packnet_dqn_policy_config.PackNetDQNPolicyConfig
+  policy:
+    _target_: hydra.utils.get_class
+    path: crl.policies.packnet.packnet_dqn_policy.PackNetDQNPolicy

@@ -1,0 +1,16 @@
+# @package _global_
+defaults:
+- override /policy: ewc
+- override /exp: ???
+- _self_
+
+name_prefix: ${exp.name}-ewc-dqn_
+name: ${call_module:crl.policies.ewc.ewc_dqn_policy_config.experiment_tag,${policy},${exp}}
+
+exp:
+  num_timesteps: 300000
+
+policy:
+  policy_kwargs:
+    buffer_size: 50000
+    fisher_lambda: 100000

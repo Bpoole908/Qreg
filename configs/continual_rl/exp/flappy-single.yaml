@@ -1,0 +1,36 @@
+num_timesteps: 300000
+num_tasks: ${eval:'len(${.exp_loader.task_func_kwargs})'}
+max_episode_steps: 5000
+ple_kwargs:
+  display_screen: False
+  force_fps: True
+  reward_values:
+    positive: 1.0
+    negative: 0.0
+    tick: 0.0
+    loss: -1.0
+    win: 0.0
+name: flappy
+
+exp_loader:
+  _target_: crl.experiment_loader.exp_loader
+
+  task_func:
+    _partial_: True
+    _target_: crl.experiments.make_ple.get_single_ple_task
+
+  task_func_kwargs:
+    - num_timesteps: ${exp.num_timesteps}
+      max_episode_steps: ${exp.max_episode_steps}
+      env_kwargs:
+        game_kwargs:
+          pipe_gap_modifier: 0
+        ple_kwargs: ${exp.ple_kwargs}
+
+  game_names:
+    - _target_: hydra.utils.get_class
+      path: crl.common.envs.ple_envs.ContinualFlappyBird
+
+  exp_kwargs:
+    continual_testing_freq: ${eval:${exp.num_timesteps}//30}
+    cycle_count: 1
