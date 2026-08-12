@@ -102,3 +102,6 @@ target/
 # Celery
 celerybeat-schedule
 celerybeat.pid
+
+# Custom
+exps/

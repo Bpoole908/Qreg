@@ -19,17 +19,17 @@ policy_kwargs:
   loss_name: dqn
   networks_to_log: ['q_head', 'encoder']
   optimize_memory_usage: true
-  rrb_add_frequency: 2001
-  rrb_add_history: 2000
+  rrb_add_frequency: 2001 # Live:
+  rrb_add_history: 2000 # Live: History of samples to draw from
   rrb_add_sample_size: 32
   rrb_buffer_size: 100000
   rrb_loss_kwargs:
     lambda_q: '???'
-    lambda_e: '???'
-    lambda_qhead: '???'
+    lambda_e: 0
+    lambda_qhead: 0
     soft_embeddings: false
     soft_q_values: false
-  rrb_update_frequency: ${.rrb_add_frequency}
+  rrb_update_frequency: ${.rrb_add_frequency} # Update: Set to null to disable
   rrb_batch_size: 256
   render_collection_freq: null
   reset_buffer: false
@@ -40,7 +40,7 @@ policy_kwargs:
   timesteps_per_save: ${exp.num_timesteps}
   track_task_id: true
   update_after: null
-  wait_to_reg: true
+  wait_to_reg: False # No-Wait: Set to True to disable  
 policy_struct:
   _target_: continual_rl.available_policies.PolicyStruct
   config:
