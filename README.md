@@ -41,6 +41,14 @@ qreg/
 └── generate_plots.py     # Entrypoint for generating plots/tables from results
 ```
 
+### Root scripts
+
+| Script | Purpose |
+|---|---|
+| `main.py` | Hydra entrypoint (`configs/continual_rl/`). Builds a policy + `continual_rl` experiment from the resolved config and runs training. |
+| `generate_plots.py` | Hydra entrypoint (`configs/plot/`). Builds a `crl.common.metrics.Metrics` object from the resolved config and generates plots/tables from results (see [Plotting](#plotting)). |
+
+
 ## `crl/` package
 
 | Path | Contents |
@@ -70,13 +78,6 @@ rather than reimplementing training from scratch.
 | `mer/` | `MERDQNPolicy` / `MERDQNPolicyConfig` | DQN + Meta-Experience Replay (nested Reptile meta-updates) |
 | `packnet/` | `PackNetDQNPolicy` / `PackNetDQNPolicyConfig` | DQN + PackNet (prunes and retrains after each task to reserve capacity for the next) |
 | `data_rehearsal/` | `DRDQNPolicy` / `DRDQNPolicyConfig` (DQN-based) | This project's "qreg" method: maintains a `RehearsalReplayBuffer` of cached embeddings/Q-values and regularizes the model towards them where strategies (e.g., No-Wait and Live-Updates) can be enabled or disabled |
-
-### Root scripts
-
-| Script | Purpose |
-|---|---|
-| `main.py` | Hydra entrypoint (`configs/continual_rl/`). Builds a policy + `continual_rl` experiment from the resolved config and runs training. |
-| `generate_plots.py` | Hydra entrypoint (`configs/plot/`). Builds a `crl.common.metrics.Metrics` object from the resolved config and generates plots/tables from results (see [Plotting](#plotting)). |
 
 ## Execution with Hydra
 
