@@ -3,6 +3,8 @@ Official code base for [Don't Forget the Critic: Value-Based Data Rehearsal for 
 
 ## Installation
 
+The provided conda environment was developed and tested on Linux and WSL distributions with NVIDIA CUDA. The environment file may need to be modified for other operating systems and hardware.
+
 1. **Create the conda environment** from the root of the repository.
 
    ```
@@ -15,10 +17,17 @@ Official code base for [Don't Forget the Critic: Value-Based Data Rehearsal for 
    conda activate qreg
    ```
 
-3. **Install repository** by running the following.
+3. **Install the repository** by running the following.
 
     ```
       pip install -e .
+    ```
+
+4. **Install PLE** by running the following. PLE cannot be installed directly with pip using the GitHub link as it will not download assets.
+
+    ```
+      git submodule update --init --recursive
+      pip install -e ple/
     ```
 
 ## Repository Structure
@@ -71,7 +80,7 @@ rather than reimplementing training from scratch.
 
 ## Execution with Hydra
 
-All code is ran using [Hydra](https://hydra.cc/). Hydra composes YAML files together (later files override earlier ones) into the final config object passed to the `@hydra.main`-decorated function.
+All code is run using [Hydra](https://hydra.cc/). Hydra composes YAML files together (later files override earlier ones) into the final config object passed to the `@hydra.main`-decorated function.
 
 ### Training
 
@@ -81,13 +90,13 @@ Training a policy on a continual-learning task sequence is driven by `main.py`, 
 - **`configs/continual_rl/`** — Hydra configs for training:
   - **`template.yaml`** — the root config. Declares `policy` and `task_seq` as *required* groups (indicated by the `???`, so a run must supply both). Also sets up output-directory templating (`job_name`, `run_dir`, `run_id`) and disables Hydra's own logging/directory side effects.
   - **`policy/*.yaml`** — one file per method (`dqn.yaml`, `ddqn.yaml`, `ewc.yaml`, `l2.yaml`, `mer.yaml`, `packnet.yaml`, `data-rehearsal.yaml`). Each has two blocks:
-    - `policy_kwargs`: the hyperparameters passed into `<Method>PolicyConfig.load_from_dict()`. **Every key must exactly match an attribute name set in that config class's `__init__`** (see`crl/policies/*/*_policy_config.py`), this mapping is by exact name only (via `ConfigBase._auto_load_class_parameters` in the `continual_rl` submodule), so a misspelled or renamed key doesn't fail silently: it's left over after parsing and raises `UnknownExperimentConfigEntry`.
+    - `policy_kwargs`: the hyperparameters passed into `<Method>PolicyConfig.load_from_dict()`. **Every key must exactly match an attribute name set in that config class's `__init__`** (see `crl/policies/*/*_policy_config.py`); this mapping is by exact name only (via `ConfigBase._auto_load_class_parameters` in the `continual_rl` submodule), so a misspelled or renamed key doesn't fail silently: it's left over after parsing and raises `UnknownExperimentConfigEntry`.
     - `policy_struct`: points (via `hydra.utils.get_class`) at the concrete `*PolicyConfig` and `*Policy` Python classes to instantiate.
-  - **`task_seq/*.yaml`** — one file per continual-learning task/environment setup (`catcher.yaml`, `flappy.yaml`, and`minihack_room.yaml`). Each defines an `exp_loader` (pointing at `crl.experiment_loader.exp_loader`).
-    - `task_func` / `task_func_kwargs` — the function that builds one task (e.g.`crl.experiments.make_ple.get_single_ple_task`) using its per-task keyword overrides (e.g. setting the `fall_speed_modifier` for Catcher).
+  - **`task_seq/*.yaml`** — one file per continual-learning task/environment setup (`catcher.yaml`, `flappy.yaml`, and `minihack_room.yaml`). Each defines an `exp_loader` (pointing at `crl.experiment_loader.exp_loader`).
+    - `task_func` / `task_func_kwargs` — the function that builds one task (e.g. `crl.experiments.make_ple.get_single_ple_task`) using its per-task keyword overrides (e.g. setting the `fall_speed_modifier` for Catcher).
     - `game_names` — the environment class to use per task (e.g. `crl.common.envs.ple_envs.ContinualCatcher`).
     - `exp_kwargs` — passed straight to `continual_rl`'s `Experiment` (e.g. `cycle_count`).
-  - **`experiment/**/*.yaml`** — "recipe" or "experiment' configs that override a `policy` with tuned hyperparameters, invoked via `+experiment=<YAML file name>` on the command line (e.g. `+experiment=qreg.yaml`). Organized by method (`dqn.yaml`, `ewc.yaml`, `qreg.yaml`, etc.), with a `search/` subfolder for hyperparameter-sweep variants.
+  - **`experiment/**/*.yaml`** — "recipe" or "experiment" configs that override a `policy` with tuned hyperparameters, invoked via `+experiment=<YAML file name>` on the command line (e.g. `+experiment=qreg.yaml`). Organized by method (`dqn.yaml`, `ewc.yaml`, `qreg.yaml`, etc.), with a `search/` subfolder for hyperparameter-sweep variants.
 
 Putting it together, a run is specified by supplying `policy` and `task_seq` directly:
 

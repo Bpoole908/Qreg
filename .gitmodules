@@ -1,0 +1,3 @@
+[submodule "ple"]
+	path = ple
+	url = https://github.com/ntasfi/PyGame-Learning-Environment.git
