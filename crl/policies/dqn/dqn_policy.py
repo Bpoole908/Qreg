@@ -225,7 +225,7 @@ class DQNPolicy(PolicyBase):
             # Only iterate total_timesteps for training
             self.total_timesteps += self.n_envs
 
-        # Continual RL handles the last_timestep_data so eval is not needed to be considered 
+        # Continual RL handles the last_timestep_data so eval does not need to be considered
         timestep_data = DQNTimestepData(observation=observation, action=action)
 
         return action, timestep_data

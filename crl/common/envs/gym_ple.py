@@ -231,7 +231,7 @@ class GymPLE(gym.Env):
     def close(self):
         """Tears down the PyGame display and quits PyGame, clearing the game's screen reference."""
         if self.game.screen is not None:
-            # Disable game screen incase object needs pickling
+            # Disable game screen in case object needs pickling
             self.game.screen = None
             pygame.display.quit()
             pygame.quit()

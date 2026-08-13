@@ -138,7 +138,7 @@ class TabulateMetrics():
 
                         if run_id not in self.eval_id_run_aggregates[train_task_id]:
                             self.eval_id_run_aggregates[train_task_id][run_id] = []
-                        # Accumulates over different task id's
+                        # Accumulates over different task ids
                         self.eval_id_run_aggregates[train_task_id][run_id].append(impact_cycle_run_data[run_id])
 
     def consolidate(self):
@@ -594,7 +594,7 @@ class Metrics(object):
         # tags contains task_id and tag which can be f'eval_reward/{task-id}' or f'train_reward/{task-id}'
         # data contains all data for a given experiment including multiple runs if passed.
         # run_data contains data for a given run of the experiment
-        # pre_task_data contains the a given evaluation (current task_tag) across all runs 
+        # pre_task_data contains a given evaluation (current task_tag) across all runs
         for task_id, task_tag in enumerate(tags):
             per_task_data = []
             for run_data in data.values():
@@ -1001,7 +1001,7 @@ class Metrics(object):
                 ys.append(np.array([data_point[1] for data_point in run_data]))
 
             # Get the bounds and the number of samples to take for the interpolation we're about to do
-            # We don't try interpolate out of the bounds of what was collected (i.e. below an experiment's min, or above its max)
+            # We don't try to interpolate out of the bounds of what was collected (i.e. below an experiment's min, or above its max)
             min_x = np.array([x.min() for x in xs]).max()
             max_x = np.array(
                 [x.max() for x in xs]
@@ -1308,7 +1308,7 @@ class Metrics(object):
         # Loop over metrics
         summary_metrics = {}
 
-        # Group by metrics and save summary tables separtely
+        # Group by metrics and save summary tables separately
         for metric in self._exp_data.get('summary_metrics', []):
             metric_summary = {}
             for t in range(tabular_transfer.num_tasks): # Number of tasks

@@ -91,7 +91,7 @@ class SparsePruner():
             AssertionError: If `seq_idx` is not present in `mask`.
         """
         assert seq_idx in mask, f"Can not prune seq_idx {seq_idx} as it is not in the mask."
-        # Select all prunable weights, ie. belonging to current dataset.
+        # Select all prunable weights, i.e. belonging to current dataset.
         mask = mask.cuda()
         tensor = weights[mask.eq(seq_idx)]
         abs_tensor = tensor.abs()
@@ -197,7 +197,7 @@ class SparsePruner():
                     module.bias.grad.data.fill_(0)
 
     def set_view(self, seq_idx: int) -> None:
-        """Bring back the version of the models from a moment corresponding to a given task.
+        """Brings back the version of the models from a moment corresponding to a given task.
 
         Args:
             seq_idx: Number of a task. If this value is N >= 0, then the weights corresponding to
@@ -318,7 +318,7 @@ class PackNetDQNPolicy(DQNPolicy):
             for module_idx, data in self.pruner.module_data.items():
                 seq_ids, counts = torch.unique(data['mask'], return_counts=True)
                 self.logger.debug(f"Module {module_idx}: Seq IDs: {seq_ids} Counts: {counts}")
-            # Compute percent of weights to prune so same for each task
+            # Compute percent of weights to prune so it's the same for each task
             num_tasks_left = self.cfg.num_tasks - self.seq_idx() - 1
             prune_perc = num_tasks_left / (num_tasks_left + 1)
             

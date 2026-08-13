@@ -44,7 +44,7 @@ class DQN(nn.Module):
         self.output_dims = output_dims
         self.flatten_dims = flatten_dims
         self.normalize_image = normalize_image
-        # Color's by stacked frames
+        # Colors by stacked frames
         n_input_channels = observation_space.shape[0] * observation_space.shape[1]
         encoder = self.build_encoder(n_input_channels)
         # Compute output shape of the CNN

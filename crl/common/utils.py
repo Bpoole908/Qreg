@@ -54,7 +54,7 @@ def set_torch_random_seed(seed: int = None, cuda_deterministic: bool = False) ->
     torch.manual_seed(seed)
 
     if cuda_deterministic:
-        # Deterministic operations for CuDNN, it may impact performances
+        # Deterministic operations for CuDNN, it may impact performance
         torch.backends.cudnn.deterministic = True
         torch.backends.cudnn.benchmark = False
   

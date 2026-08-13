@@ -108,7 +108,7 @@ class EWCDQNPolicy(DQNPolicy):
         for name, old_fisher in self.fishers.items():
             new_fisher = fishers[name]
             new_fisher_norm = new_fisher / self.fisher_norm[name] 
-            # NOTE: Normalize new_fisher using the prior norm as new_fisher can be extremely small value
+            # NOTE: Normalize new_fisher using the prior norm as new_fisher can be an extremely small value
             fisher = (self.cfg.fisher_gamma * old_fisher) + new_fisher_norm
             # Normalize online fisher matrix, taken from CORA 
             # https://github.com/AGI-Labs/continual_rl/blob/f2754bb282757829765beb4703f24b87efa13ff9/continual_rl/policies/ewc/ewc_monobeast.py#L277
