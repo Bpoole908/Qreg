@@ -1,5 +1,25 @@
 """
-Code extended from continual_rl
+MIT License
+
+Copyright (c) 2020 SamNPowers
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 
 @inproceedings{cora2022,
     title={CORA: Benchmarks, Baselines, and Metrics as a Platform for Continual Reinforcement Learning Agents},
@@ -30,7 +50,7 @@ def get_policy_and_experiment_from_config(config, output_dir):
     The config dictionary will tell us which policy to use, which will allow us to populate the correct config file.
     """
     # Extract the spec of the experiment we will be running
-    experiment = config['exp'].pop('exp_loader')
+    experiment = config['task_seq'].pop('exp_loader')
     if callable(experiment):
         experiment = experiment() 
 

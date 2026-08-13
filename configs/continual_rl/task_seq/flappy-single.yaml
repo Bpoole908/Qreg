@@ -20,17 +20,17 @@ exp_loader:
     _target_: crl.experiments.make_ple.get_single_ple_task
 
   task_func_kwargs:
-    - num_timesteps: ${exp.num_timesteps}
-      max_episode_steps: ${exp.max_episode_steps}
+    - num_timesteps: ${task_seq.num_timesteps}
+      max_episode_steps: ${task_seq.max_episode_steps}
       env_kwargs:
         game_kwargs:
           pipe_gap_modifier: 0
-        ple_kwargs: ${exp.ple_kwargs}
+        ple_kwargs: ${task_seq.ple_kwargs}
 
   game_names:
     - _target_: hydra.utils.get_class
       path: crl.common.envs.ple_envs.ContinualFlappyBird
 
   exp_kwargs:
-    continual_testing_freq: ${eval:${exp.num_timesteps}//30}
+    continual_testing_freq: ${eval:${task_seq.num_timesteps}//30}
     cycle_count: 1

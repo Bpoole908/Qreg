@@ -1,4 +1,4 @@
-num_timesteps: 300000
+num_timesteps: 25000
 num_tasks: ${eval:'len(${.exp_loader.task_func_kwargs})'}
 max_episode_steps: 5000
 ple_kwargs:
@@ -18,14 +18,31 @@ exp_loader:
   task_func:
     _partial_: True
     _target_: crl.experiments.make_ple.get_single_ple_task
-
+    num_timesteps: ${task_seq.num_timesteps}
+    max_episode_steps: ${task_seq.max_episode_steps}
+    continual_eval_num_returns: 5
+    
   task_func_kwargs:
-    - num_timesteps: ${exp.num_timesteps}
-      max_episode_steps: ${exp.max_episode_steps}
-      env_kwargs:
+    - env_kwargs:
         game_kwargs:
           fall_speed_modifier: 0
-        ple_kwargs: ${exp.ple_kwargs}
+        ple_kwargs: ${task_seq.ple_kwargs}
+    - env_kwargs:
+        game_kwargs:
+          fall_speed_modifier: 1
+        ple_kwargs: ${task_seq.ple_kwargs}
+    - env_kwargs:
+        game_kwargs:
+          fall_speed_modifier: 2
+        ple_kwargs: ${task_seq.ple_kwargs}
+    - env_kwargs:
+        game_kwargs:
+          fall_speed_modifier: 3
+        ple_kwargs: ${task_seq.ple_kwargs}
+    - env_kwargs:
+        game_kwargs:
+          fall_speed_modifier: 4
+        ple_kwargs: ${task_seq.ple_kwargs}
 
   game_names:
     - _target_: hydra.utils.get_class
@@ -40,5 +57,5 @@ exp_loader:
       path: crl.common.envs.ple_envs.ContinualCatcher
 
   exp_kwargs:
-    continual_testing_freq: ${eval:${exp.num_timesteps}//30}
-    cycle_count: 1
+    continual_testing_freq: ${eval:${task_seq.num_timesteps}//5}
+    cycle_count: 4

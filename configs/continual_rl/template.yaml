@@ -1,35 +1,40 @@
 defaults:
   - _self_
   - policy: ???
-  - exp: ???
+  - task_seq: ???
   - override hydra/hydra_logging: disabled  
   - override hydra/job_logging: disabled 
 
 # Way to group similar experiments.
-# By default will group by date and time.
+# By default will group by date (no time component).
 output_dir: ${now:%Y-%m-%d}
 # Name of the job/experiment to be ran.
-# This is typically assigned via when creating an experiment config
+# Typically set by an `experiment/*.yaml` recipe config (which has `# @package _global_`,
+# so its `name` field merges into this root-level field), e.g. via the `call_module`+
+# `experiment_tag` pattern. `task_seq/*.yaml` configs are not `@package _global_`, so their
+# own `name` field (e.g. `catcher`) lands under `task_seq.name`, not here.
 name: ???
+# Optional prefix/suffix concatenated onto `name` to form `job_name`, without editing `name` itself
 name_prefix: ''
 name_postfix: ''
+# Full run identifier used to name the output directory and as the Hydra job name below
 job_name: ${name_prefix}${name}${name_postfix}
 # Only build and instantiate the config - DOES NOT run the actual experiment
 validate_config: False
 
-# Variables for hydra config - DO NOT OVERWRITE!
+# Variables for hydra config directory structure
 # These are not added directly to the hydra config below
-# in order to prevent the set_run_id() resolver from having a recursive loop.
+# in order to prevent the get_run_id() resolver from having a recursive loop.
+# Root directory under which all run outputs are saved
 root_dir: 'exps'
+# Output directory for a single run: exps/<output_dir>/<job_name>/
 run_dir: ${root_dir}/${output_dir}/${job_name}
+# Base directory shared by all jobs in a Hydra multirun (-m) sweep
 sweep_dir: ${root_dir}/${output_dir}
+# Per-job subdirectory under sweep_dir during a multirun sweep
 sweep_subdir: ${job_name}
+# Auto-incrementing integer distinguishing repeated runs of the same job_name under run_dir (see crl.common.yaml.GetRunID)
 run_id: ${get_run_id:${run_dir}}
-
-# seed:
-#   _target_: crl.common.utils.set_torch_random_seed
-#   seed: 42
-#   cuda_deterministic: False
 
 # Hydra config options - DO NOT OVERWRITE!
 hydra:
@@ -41,6 +46,3 @@ hydra:
   sweep:
     dir: ${sweep_dir}
     subdir: ${sweep_subdir}/${run_id}
-  callbacks:
-    save_job_info:
-      _target_: hydra.experimental.callbacks.PickleJobInfoCallback

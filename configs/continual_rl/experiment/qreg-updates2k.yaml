@@ -1,13 +1,13 @@
 # @package _global_
 defaults:
 - override /policy: data-rehearsal
-- override /exp: ???
+- override /task_seq: ???
 - _self_
 
-name_prefix: ${exp.name}-dr-dqn_
-name: ${call_module:crl.policies.data_rehearsal.drdqn_policy_config.experiment_tag,${policy},${exp}}
+name_prefix: ${task_seq.name}-dr-dqn_
+name: ${call_module:crl.policies.data_rehearsal.drdqn_policy_config.experiment_tag,${policy},${task_seq}}
 
-exp:
+task_seq:
   num_timesteps: 300000
 
 policy:
@@ -15,7 +15,7 @@ policy:
     buffer_size: 50000
     rrb_buffer_size: 100000
     learning_rate: 0.0001
-    rrb_add_frequency: ${exp.num_timesteps}
+    rrb_add_frequency: ${task_seq.num_timesteps}
     rrb_add_history: null
     rrb_update_frequency: 2000
     timesteps_per_collection: 4

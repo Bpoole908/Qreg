@@ -12,6 +12,6 @@ exp_loader:
     - ["Room-Monster-5x5-v0", "Room-Monster-15x15-v0"]
     - ["Room-Trap-5x5-v0", "Room-Trap-15x15-v0"]
     - ["Room-Ultimate-5x5-v0", "Room-Ultimate-15x15-v0"]
-  num_timesteps: ${exp.num_timesteps}
-  continual_testing_freq:  ${eval:${exp.num_timesteps}//5}
+  num_timesteps: ${task_seq.num_timesteps}
+  continual_testing_freq:  ${eval:${task_seq.num_timesteps}//5}
   cycle_count: 4

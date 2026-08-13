@@ -37,7 +37,7 @@ policy_kwargs:
   save_replay_buffer: true
   target_update_frequency: 10000
   timesteps_per_collection: 4
-  timesteps_per_save: ${exp.num_timesteps}
+  timesteps_per_save: ${task_seq.num_timesteps}
   track_task_id: true
   update_after: null
   wait_to_reg: False # No-Wait: Set to True to disable  

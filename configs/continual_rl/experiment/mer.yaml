@@ -1,13 +1,13 @@
 # @package _global_
 defaults:
 - override /policy: mer
-- override /exp: ???
+- override /task_seq: ???
 - _self_
 
-name_prefix: ${exp.name}-mer_
-name: ${call_module:crl.policies.mer.mer_dqn_policy_config.experiment_tag,${policy},${exp}}
+name_prefix: ${task_seq.name}-mer_
+name: ${call_module:crl.policies.mer.mer_dqn_policy_config.experiment_tag,${policy},${task_seq}}
 
-exp:
+task_seq:
   num_timesteps: 300000
 
 policy:

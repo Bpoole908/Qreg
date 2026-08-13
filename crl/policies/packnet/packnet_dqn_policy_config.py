@@ -2,12 +2,12 @@ from crl.policies.dqn.dqn_policy_config import DQNPolicyConfig, get_tag_value
 from crl.common.yaml import convert_float_to_str as f2s
 
 
-def experiment_tag(policy, exp):
+def experiment_tag(policy, task_seq):
     """Builds a short experiment tag string summarizing a PackNet-DQN policy's non-default hyperparameters.
 
     Args:
         policy: The policy instance, whose `policy_kwargs` dict is inspected.
-       exp: The raw experiment config.
+       task_seq: The raw task sequence config.
 
     Returns:
         An underscore-joined tag string, including only the hyperparameters

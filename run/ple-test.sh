@@ -12,6 +12,6 @@ num_timesteps=3000
 # Hydra command
 HYDRA_FULL_ERROR=1 python main.py -m \
 +experiment=${experiment} \
-exp=${task} \
-++exp.exp_loader.exp_kwargs.continual_testing_freq=${continual_testing_freq} \
-++exp.num_timesteps=${num_timesteps}
+task_seq=${task} \
+++task_seq.exp_loader.exp_kwargs.continual_testing_freq=${continual_testing_freq} \
+++task_seq.num_timesteps=${num_timesteps}

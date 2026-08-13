@@ -1,13 +1,13 @@
 # @package _global_
 defaults:
 - override /policy: ewc
-- override /exp: ???
+- override /task_seq: ???
 - _self_
 
-name_prefix: ${exp.name}-ewc-dqn_
-name: ${call_module:crl.policies.ewc.ewc_dqn_policy_config.experiment_tag,${policy},${exp}}
+name_prefix: ${task_seq.name}-ewc-dqn_
+name: ${call_module:crl.policies.ewc.ewc_dqn_policy_config.experiment_tag,${policy},${task_seq}}
 
-exp:
+task_seq:
   num_timesteps: 300000
 
 policy:

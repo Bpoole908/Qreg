@@ -73,7 +73,6 @@ title_size: 50
 legend_size: 15
 axis_size: 40
 axis_label_size: 60
-x_scale: 1e6
 num_task_steps: 300e3
 num_cycles: 4
 num_cycles_for_forgetting: ${.num_cycles}

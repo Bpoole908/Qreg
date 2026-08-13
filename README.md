@@ -75,33 +75,33 @@ All code is ran using [Hydra](https://hydra.cc/). Hydra composes YAML files toge
 
 ### Training
 
-Training a policy on a continual-learning task sequence is driven by `main.py`, which composes a `policy` config and an `exp` config into a `continual_rl` `Experiment` and runs it.
+Training a policy on a continual-learning task sequence is driven by `main.py`, which composes a `policy` config and a `task_seq` config into a `continual_rl` `Experiment` and runs it.
 
 - **`main.py`** — Hydra entrypoint (`configs/continual_rl/`) that builds a policy + `continual_rl` experiment from the resolved config and runs training.
 - **`configs/continual_rl/`** — Hydra configs for training:
-  - **`template.yaml`** — the root config. Declares `policy` and `exp` as *required* groups (indicated by the `???`, so a run must supply both). Also sets up output-directory templating (`job_name`, `run_dir`, `run_id`) and disables Hydra's own logging/directory side effects.
+  - **`template.yaml`** — the root config. Declares `policy` and `task_seq` as *required* groups (indicated by the `???`, so a run must supply both). Also sets up output-directory templating (`job_name`, `run_dir`, `run_id`) and disables Hydra's own logging/directory side effects.
   - **`policy/*.yaml`** — one file per method (`dqn.yaml`, `ddqn.yaml`, `ewc.yaml`, `l2.yaml`, `mer.yaml`, `packnet.yaml`, `data-rehearsal.yaml`). Each has two blocks:
     - `policy_kwargs`: the hyperparameters passed into `<Method>PolicyConfig.load_from_dict()`. **Every key must exactly match an attribute name set in that config class's `__init__`** (see`crl/policies/*/*_policy_config.py`), this mapping is by exact name only (via `ConfigBase._auto_load_class_parameters` in the `continual_rl` submodule), so a misspelled or renamed key doesn't fail silently: it's left over after parsing and raises `UnknownExperimentConfigEntry`.
     - `policy_struct`: points (via `hydra.utils.get_class`) at the concrete `*PolicyConfig` and `*Policy` Python classes to instantiate.
-  - **`exp/*.yaml`** — one file per continual-learning task/environment setup (`catcher.yaml`, `flappy.yaml`, and`minihack_room.yaml`). Each defines an `exp_loader` (pointing at `crl.experiment_loader.exp_loader`).
+  - **`task_seq/*.yaml`** — one file per continual-learning task/environment setup (`catcher.yaml`, `flappy.yaml`, and`minihack_room.yaml`). Each defines an `exp_loader` (pointing at `crl.experiment_loader.exp_loader`).
     - `task_func` / `task_func_kwargs` — the function that builds one task (e.g.`crl.experiments.make_ple.get_single_ple_task`) using its per-task keyword overrides (e.g. setting the `fall_speed_modifier` for Catcher).
     - `game_names` — the environment class to use per task (e.g. `crl.common.envs.ple_envs.ContinualCatcher`).
     - `exp_kwargs` — passed straight to `continual_rl`'s `Experiment` (e.g. `cycle_count`).
   - **`experiment/**/*.yaml`** — "recipe" or "experiment' configs that override a `policy` with tuned hyperparameters, invoked via `+experiment=<YAML file name>` on the command line (e.g. `+experiment=qreg.yaml`). Organized by method (`dqn.yaml`, `ewc.yaml`, `qreg.yaml`, etc.), with a `search/` subfolder for hyperparameter-sweep variants.
 
-Putting it together, a run is specified by supplying `policy` and `exp` directly:
+Putting it together, a run is specified by supplying `policy` and `task_seq` directly:
 
 ```
-python main.py policy=data-rehearsal exp=catcher job_name=qreg
+python main.py policy=data-rehearsal task_seq=catcher job_name=qreg
 ```
 
 or by using a bundled experiment plus a task:
 
 ```
-python main.py +experiment=qreg exp=catcher
+python main.py +experiment=qreg task_seq=catcher
 ```
 
-To run baselines, Qreg, and Qreg+NWLU simply use the predefined experiment configs and specify the desired task sequence (e.g., exp) config name (as shown above).
+To run baselines, Qreg, and Qreg+NWLU simply use the predefined experiment configs and specify the desired `task_seq` config name (as shown above).
 
 **Naming and run IDs.** Every `*_policy_config.py` module also defines an `experiment_tag()` function that builds a short, human-readable tag from *important* hyperparameters for the experiment (e.g. `rb=50k_lr=0.0001`). Each `experiment/*.yaml` recipe config's `name` field calls this via the custom `call_module` OmegaConf resolver (e.g. `configs/continual_rl/experiment/qreg.yaml`), overriding `template.yaml`'s required `name: ???` placeholder, so output directories self-document their configuration. Repeated runs of the same `job_name` are kept separate by an auto-incrementing `run_id`, computed by the `get_run_id` resolver (`crl.common.yaml.GetRunID`), which scans the target directory for the next free integer.
 

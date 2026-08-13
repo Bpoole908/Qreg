@@ -1045,7 +1045,6 @@ class Metrics(object):
         yaxis_label = self._exp_data.get("yaxis_label", "Average Return")
         xaxis_label = self._exp_data.get("xaxis_label", "Steps")
         x_range = [-10, num_task_steps * num_tasks * num_cycles]
-        x_scale = self._exp_data['x_scale']
         output_dir = self._exp_data.get('output_dir')
         axis_size = self._exp_data['axis_size']
         axis_label_size = self._exp_data['axis_label_size']

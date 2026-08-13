@@ -2,13 +2,13 @@
 # NOTE: Packnet will use ALL weights when evaluating minihack tasks that are used for evaluation only.
 defaults:
 - override /policy: packnet
-- override /exp: ???
+- override /task_seq: ???
 - _self_
 
-name_prefix: ${exp.name}-packnet_
-name: ${call_module:crl.policies.packnet.packnet_dqn_policy_config.experiment_tag,${policy},${exp}}
+name_prefix: ${task_seq.name}-packnet_
+name: ${call_module:crl.policies.packnet.packnet_dqn_policy_config.experiment_tag,${policy},${task_seq}}
 
-exp:
+task_seq:
   num_timesteps: 300000
 
 policy:

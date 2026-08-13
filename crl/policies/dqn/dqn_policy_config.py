@@ -36,12 +36,12 @@ def get_tag_value(
         return default
 
 
-def experiment_tag(policy, exp):
+def experiment_tag(policy, task_seq):
     """Builds a short experiment tag string summarizing a DQN policy's non-default hyperparameters.
 
     Args:
         policy: The policy instance, whose `policy_kwargs` dict is inspected.
-       exp: The raw experiment config.
+       task_seq: The raw task sequence config.
 
     Returns:
         An underscore-joined tag string (e.g. 'rb=1m_lr=0.0001_rsrb'), including

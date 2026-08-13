@@ -6,17 +6,24 @@ defaults:
 - override hydra/job_logging: disabled 
 
 # Path to experiment directory containing results
+# Root directory containing the exps/ directory (matches run/plot.sh's ++default_root_dir override)
 default_root_dir: .
+# Name of the subdirectory under default_root_dir holding all run outputs (matches
+# root_dir in configs/continual_rl/template.yaml)
 default_exp_dir: exps
+# Resolved path to the exps/ directory: default_root_dir/default_exp_dir
 exp_dir: ${join:${default_root_dir}, ${default_exp_dir}}
 
 
 # Arguments used to construct results output directory
 exp_name: ??? # Name of experiment or task (e.g., catcher)
 results_parent_dir: ??? # Parent directory name, used to identify a wider grouping of experiment results (e.g., v1)
-results_dir: ??? # Name of subdirectory for results (e.g., baselines) 
-# Output directory save location
+results_dir: ??? # Name of subdirectory for results (e.g., baselines)
+# Date-stamped subfolder for this plot-generation run (mirrors output_dir's date grouping
+# in configs/continual_rl/template.yaml); no time component
 plot_group: ${now:%Y-%m-%d}
+# Where generated plots/tables are saved: exp_dir/plots-tables/<results_parent_dir>/<results_dir>/
+# <exp_name>/<num_task_steps>/<plot_group>/ (num_task_steps formatted via float_to_str, e.g. '300k')
 output_dir: ${.exp_dir}/plots-tables/${results_parent_dir}/${results_dir}/${exp_name}/${float_to_str:${num_task_steps}}/${plot_group}
 
 save_in_cache: True # Saves a cached version of the tensorboard event file to speed up loading
@@ -25,40 +32,49 @@ use_cache: True # Load using saved cache, set to False to recache event files
 tag_base: eval_reward # Tag to be used when loading data from tensorboard event files
 
 # Task info
+# Display name for each task, one per task in the sequence; referenced positionally
+# (task_names.0, task_names.1, ...) by configs/plot/tasks/*.yaml
 task_names: ???
+# Default run indices. Not currently read by crl.common.metrics.Metrics — each model
+# entry under `models:` supplies its own `runs` list of run directories instead.
 runs: [0]
-num_tasks: ???
-num_task_steps: ???
-num_cycles: ???
-cycle_size: ${eval:${num_task_steps} * ${num_tasks}}
-total_steps:  ${eval:${num_task_steps} * ${num_tasks} * ${num_cycles}}
-buffered_total_steps: ${eval:${total_steps} + 100e3}
+num_tasks: ??? # Number of tasks in the sequence
+num_task_steps: ??? # Steps trained per task, per cycle (mirrors task_seq.num_timesteps)
+num_cycles: ??? # Number of cycles through the full task sequence
+cycle_size: ${eval:${num_task_steps} * ${num_tasks}} # Steps per full cycle through all tasks
+total_steps:  ${eval:${num_task_steps} * ${num_tasks} * ${num_cycles}} # Total steps across every task and cycle
+buffered_total_steps: ${eval:${total_steps} + 100e3} # total_steps plus a 100k-step buffer, used below for xaxis_tickvals
 
 # Summary and metric info
-rolling_mean_count: 20
-filter: 'ma'
+rolling_mean_count: 20 # Rolling-mean smoothing window size (in data points), used when filter is 'ma'
+filter: 'ma' # How to smooth reward curves before plotting: 'ma' (moving average), 'ema' (exponential moving average), or 'smooth'
+# Number of cycles considered when computing forgetting/transfer metrics
+# (Metrics.compute_metrics); defaults to num_cycles but can be set lower to only
+# evaluate forgetting over the sequence's earlier cycles
 num_cycles_for_forgetting: ${num_cycles}
+# Metric names aggregated into the summary table/LaTeX export
 summary_metrics:
 - transfer
 - worst_transfer
 - average_return
 
 # Plotting
-legend_size: 10
-legend_entrywidth: 0.12
-title_size: 20
-axis_size: 12
-axis_label_size: 12
-grid_size: [3, 2]
-y_range: ???
-yaxis_dtick: ???
-x_scale: 1
+legend_size: 10 # Plotly legend font size (points)
+legend_entrywidth: 0.12 # Width of each legend entry, as a fraction of plot width (entrywidthmode='fraction')
+title_size: 20 # Plotly per-task subplot title font size (points)
+axis_size: 12 # Plotly axis tick label font size (points)
+axis_label_size: 12 # Plotly axis title font size (points)
+grid_size: [3, 2] # Unused by the current Metrics implementation (no references in crl/common/metrics.py); likely vestigial
+y_range: ??? # Per-task [min, max] y-axis range; a list indexed positionally (y_range.<i>) by configs/plot/tasks/*.yaml
+yaxis_dtick: ??? # Per-task y-axis tick spacing; a list indexed positionally (yaxis_dtick.<i>) by configs/plot/tasks/*.yaml
+# Step values (0 to buffered_total_steps, spaced by num_task_steps) at which to place x-axis ticks
 xaxis_tickvals:
   _target_: numpy.arange
   _args_:
   - 0
   - ${eval:${buffered_total_steps} + 1}
   - ${num_task_steps}
+# Tick label for each value in xaxis_tickvals, in millions of steps (blank strings thin out the labeling)
 xaxis_text: ['0', '', '0.6', '', '1.2', '', '1.8', '', '2.4', '', '3', '', '3.6', '', '4.2', '', '4.8', '', '5.4', '', '6']
 
 # Hydra configuration (DO NOT OVERWRITE UNLESS YOU KNOW WHAT YOU ARE DOING)
