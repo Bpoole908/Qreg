@@ -1,0 +1,78 @@
+# @package _global_
+defaults:
+- override /tasks: ple
+- override /models:
+save_in_cache: True
+use_cache: True
+
+# Required parameters
+exp_name: catcher
+results_parent_dir: main-results
+results_dir: dqn/buffer
+plot_group: ${now:%Y-%m-%d}
+
+# Load directories
+load_dir:  main-results/ple/${exp_name}/300k
+
+models:
+  $\text{DQN}$: 
+    dir: baselines/dqn_rb=50k_lr=0.0001
+    color_alpha: 0.25
+    color: rgba(31, 119, 180, 1)
+    runs: ${eval:"[f'${load_dir}/${.dir}/{i}' for i in range(10)]"}
+    line:
+      dash: dot
+      width: 5
+
+  $100k$:
+    dir: qreg-live-updates/rer_rbs=256_rb=50k_rrb=100k_lr=0.0001_raf=2k_rah=2k_rass=64_ruf=2k_gbc=1
+    color_alpha: 0.25
+    color: rgba(202,86,119,1)
+    runs: ${eval:"[f'${load_dir}/${.dir}/{i}' for i in range(10)]"}
+    line:
+      width: 5
+  $50k$:
+    dir: buffer/dr-dqn_rbs=256_rb=50k_rrb=50k_lr=0.0001_raf=2k_rah=2k_rass=64_ruf=2k_lq=1
+    color_alpha: 0.25
+    color: rgba(148, 103, 189, 1)
+    runs: ${eval:"[f'${load_dir}/${.dir}/{i}' for i in range(5)]"}
+    line:
+      width: 5
+  $25k$:
+    dir: buffer/dr-dqn_rbs=256_rb=50k_rrb=25k_lr=0.0001_raf=2k_rah=2k_rass=64_ruf=2k_lq=1
+    color_alpha: 0.25
+    color: rgba(140, 86, 75, 1)
+    runs: ${eval:"[f'${load_dir}/${.dir}/{i}' for i in range(5)]"}
+    line:
+      width: 5
+
+legend_entrywidth: 0.12
+title_size: 50
+legend_size: 15
+axis_size: 40
+axis_label_size: 60
+x_scale: 1e6
+num_task_steps: 300e3
+num_cycles: 4
+num_cycles_for_forgetting: ${.num_cycles}
+num_tasks: 5
+runs: [0]
+rolling_mean_count: 10
+task_names:
+- Task 1
+- Task 2
+- Task 3
+- Task 4
+- Task 5
+y_range:
+- [-3, 700]
+- [-3, 700]
+- [-3, 700]
+- [-3, 700]
+- [-3, 700]
+yaxis_dtick: 
+- 100
+- 100
+- 100
+- 100
+- 100

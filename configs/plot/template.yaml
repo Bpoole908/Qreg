@@ -1,0 +1,72 @@
+defaults:
+- tasks: ???
+- models: ???
+- _self_
+- override hydra/hydra_logging: disabled  
+- override hydra/job_logging: disabled 
+
+# Path to experiment directory containing results
+default_root_dir: .
+default_exp_dir: exps
+exp_dir: ${join:${default_root_dir}, ${default_exp_dir}}
+
+
+# Arguments used to construct results output directory
+exp_name: ??? # Name of experiment or task (e.g., catcher)
+results_parent_dir: ??? # Parent directory name, used to identify a wider grouping of experiment results (e.g., v1)
+results_dir: ??? # Name of subdirectory for results (e.g., baselines) 
+# Output directory save location
+plot_group: ${now:%Y-%m-%d}
+output_dir: ${.exp_dir}/plots-tables/${results_parent_dir}/${results_dir}/${exp_name}/${float_to_str:${num_task_steps}}/${plot_group}
+
+save_in_cache: True # Saves a cached version of the tensorboard event file to speed up loading
+use_cache: True # Load using saved cache, set to False to recache event files
+
+tag_base: eval_reward # Tag to be used when loading data from tensorboard event files
+
+# Task info
+task_names: ???
+runs: [0]
+num_tasks: ???
+num_task_steps: ???
+num_cycles: ???
+cycle_size: ${eval:${num_task_steps} * ${num_tasks}}
+total_steps:  ${eval:${num_task_steps} * ${num_tasks} * ${num_cycles}}
+buffered_total_steps: ${eval:${total_steps} + 100e3}
+
+# Summary and metric info
+rolling_mean_count: 20
+filter: 'ma'
+num_cycles_for_forgetting: ${num_cycles}
+summary_metrics:
+- transfer
+- worst_transfer
+- average_return
+
+# Plotting
+legend_size: 10
+legend_entrywidth: 0.12
+title_size: 20
+axis_size: 12
+axis_label_size: 12
+grid_size: [3, 2]
+y_range: ???
+yaxis_dtick: ???
+x_scale: 1
+xaxis_tickvals:
+  _target_: numpy.arange
+  _args_:
+  - 0
+  - ${eval:${buffered_total_steps} + 1}
+  - ${num_task_steps}
+xaxis_text: ['0', '', '0.6', '', '1.2', '', '1.8', '', '2.4', '', '3', '', '3.6', '', '4.2', '', '4.8', '', '5.4', '', '6']
+
+# Hydra configuration (DO NOT OVERWRITE UNLESS YOU KNOW WHAT YOU ARE DOING)
+# By default we disable all logging and directory creation.
+hydra:
+  output_subdir: null  
+  run:  
+    dir: .
+  sweep:
+    dir: .
+    subdir: .

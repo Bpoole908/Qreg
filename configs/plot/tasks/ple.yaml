@@ -1,0 +1,55 @@
+- name: ${task_names.0}
+  i: 0 
+  y_range: ${y_range.0}
+  yaxis_dtick: ${yaxis_dtick.0}
+  showlegend: True
+  train_regions:
+    _target_: crl.common.utils.get_cycle_regions
+    start: 0
+    end: ${num_task_steps}
+    cycle_size: ${cycle_size}
+    num_cycles: ${num_cycles}
+- name: ${task_names.1}
+  i: 1
+  y_range: ${y_range.1}
+  yaxis_dtick: ${yaxis_dtick.1}
+  showlegend: True
+  train_regions:
+    _target_: crl.common.utils.get_cycle_regions
+    start: ${eval:${num_task_steps} * 1}
+    end: ${eval:${num_task_steps} * 2}
+    cycle_size: ${cycle_size}
+    num_cycles: ${num_cycles}
+- name: ${task_names.2}
+  i: 2 
+  y_range: ${y_range.2}
+  yaxis_dtick: ${yaxis_dtick.2}
+  showlegend: True
+  train_regions:
+    _target_: crl.common.utils.get_cycle_regions
+    start: ${eval:${num_task_steps} * 2}
+    end: ${eval:${num_task_steps} * 3}
+    cycle_size: ${cycle_size}
+    num_cycles: ${num_cycles}
+- name: ${task_names.3}
+  i: 3 
+  y_range: ${y_range.3}
+  yaxis_dtick: ${yaxis_dtick.3}
+  showlegend: True
+  train_regions:
+    _target_: crl.common.utils.get_cycle_regions
+    start: ${eval:${num_task_steps} * 3}
+    end: ${eval:${num_task_steps} * 4}
+    cycle_size: ${cycle_size}
+    num_cycles: ${num_cycles}
+- name: ${task_names.4}
+  i: 4 
+  y_range: ${y_range.4}
+  yaxis_dtick: ${yaxis_dtick.4}
+  showlegend: True
+  train_regions:
+    _target_: crl.common.utils.get_cycle_regions
+    start: ${eval:${num_task_steps} * 4}
+    end: ${eval:${num_task_steps} * 5}
+    cycle_size: ${cycle_size}
+    num_cycles: ${num_cycles}

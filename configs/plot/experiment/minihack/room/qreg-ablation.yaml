@@ -1,0 +1,116 @@
+# @package _global_
+defaults:
+- override /tasks: minihack
+- override /models:
+save_in_cache: True
+use_cache: True
+
+# Required parameters
+exp_name: room
+results_parent_dir: main-results
+results_dir: dqn/qreg-ablation
+plot_group: ${now:%Y-%m-%d}
+
+# Load directories
+load_dir: main-results/minihack/${exp_name}/300k
+
+# https://medialab.github.io/iwanthue/
+models:
+  $\text{DQN}$: 
+    dir: baselines/dqn_rb=50k_lr=0.0001
+    color_alpha: 0.25
+    color: rgba(31, 119, 180, 1)
+    runs: ${eval:"[f'${load_dir}/${.dir}/{i}' for i in range(10)]"}
+    line:
+      dash: dot
+      width: 5
+
+  $\text{DDQN}$: 
+    dir: baselines/ddqn_rb=50k_lr=0.0001
+    color_alpha: 0.25
+    color: rgba(120, 120, 120, 1)
+    runs: ${eval:"[f'${load_dir}/${.dir}/{i}' for i in range(10)]"}
+    line:
+      dash: dot
+      width: 5
+
+  $\text{Qreg}$:
+    dir: qreg/rer_rbs=256_rb=50k_rrb=100k_lr=0.0001_raf=300k_rah=None_rass=10k_ruf=None_wtr_gbc=1
+    color_alpha: 0.25
+    color: rgba(255, 127, 14, 1)
+    runs: ${eval:"[f'${load_dir}/${.dir}/{i}' for i in range(10)]"}
+    line:
+      width: 5
+  $\text{U}$:
+    dir: qreg-updates/rer_rbs=256_rb=50k_rrb=100k_lr=0.0001_raf=300k_rah=None_rass=10k_ruf=300k_wtr_gbc=1
+    color_alpha: 0.25
+    color: rgba(148, 103, 189, 1) 
+    runs: ${eval:"[f'${load_dir}/${.dir}/{i}' for i in range(10)]"}
+    line:
+      width: 5
+  # $\text{U2k}$:
+  #   dir: qreg-updates/rer_rbs=256_rb=50k_rrb=100k_lr=0.0001_raf=300k_rah=None_rass=10k_ruf=2k_wtr_gbc=1
+  #   color_alpha: 0.25
+  #   color: rgba(148, 158, 189, 1) 
+  #   runs: ${eval:"[f'${load_dir}/${.dir}/{i}' for i in range(5)]"}
+  #   line:
+  #     width: 5
+  $\text{L}$:
+    dir: qreg-live/rer_rbs=256_rb=50k_rrb=100k_lr=0.0001_raf=2k_rah=2k_rass=64_ruf=None_wtr_gbc=1
+    color_alpha: 0.1
+    color: rgba(140, 86, 75, 1) 
+    runs: ${eval:"[f'${load_dir}/${.dir}/{i}' for i in range(10)]"}
+    line:
+      width: 5
+  $\text{LU}$:
+    dir: qreg-live-updates/rer_rbs=256_rb=50k_rrb=100k_lr=0.0001_raf=2k_rah=2k_rass=64_ruf=2k_wtr_gbc=1
+    color_alpha: 0.1
+    color: rgba(227, 119, 194, 1) 
+    runs: ${eval:"[f'${load_dir}/${.dir}/{i}' for i in range(10)]"}
+    line:
+      width: 5
+  $\text{NWL}$:
+    dir: qreg-live/rer_rbs=256_rb=50k_rrb=100k_lr=0.0001_raf=2k_rah=2k_rass=64_ruf=None_gbc=1
+    color_alpha: 0.25
+    color: rgba(23, 190, 207, 1)
+    runs: ${eval:"[f'${load_dir}/${.dir}/{i}' for i in range(10)]"}
+    line:
+      width: 5
+  $\text{NWLU}$:
+    dir: qreg-live-updates/rer_rbs=256_rb=50k_rrb=100k_lr=0.0001_raf=2k_rah=2k_rass=64_ruf=2k_gbc=1
+    color_alpha: 0.25
+    color: rgba(214, 39, 40, 1)
+    runs: ${eval:"[f'${load_dir}/${.dir}/{i}' for i in range(10)]"}
+    line:
+      width: 5
+
+legend_entrywidth: 0.08
+title_size: 50
+legend_size: 15
+axis_size: 40
+axis_label_size: 60
+x_scale: 1e6
+num_task_steps: 300e3
+num_cycles: 4
+num_cycles_for_forgetting: ${.num_cycles}
+num_tasks: 5
+runs: [0]
+rolling_mean_count: 10
+task_names:
+- Task 1
+- Task 2
+- Task 3
+- Task 4
+- Task 5
+y_range:
+- [-.1, 1]
+- [-.1, 1]
+- [-.1, 1]
+- [-.1, 1]
+- [-.1, 1]
+yaxis_dtick: 
+- .2
+- .2
+- .2
+- .2
+- .2
