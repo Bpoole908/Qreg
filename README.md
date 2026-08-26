@@ -1,6 +1,18 @@
 
 Official code base for [Don't Forget the Critic: Value-Based Data Rehearsal for Multi-Cyclic Continual Reinforcement Learning](https://openreview.net/forum?id=wYayhflqqR) by Benjamin Poole, Andrew Quinn, Li Yang, and Minwoo Lee.
 
+```
+@article{
+poole2026dont,
+title={Don't Forget the Critic: Value-Based Data Rehearsal for Multi-Cyclic Continual Reinforcement Learning},
+author={Benjamin Poole and Andrew Quinn and Li Yang and Minwoo Lee},
+journal={Transactions on Machine Learning Research},
+issn={2835-8856},
+year={2026},
+url={https://openreview.net/forum?id=wYayhflqqR},
+note={}
+}
+```
 ## Installation
 
 The provided conda environment was developed and tested on Linux and WSL distributions with NVIDIA CUDA. The environment file may need to be modified for other operating systems and hardware.
